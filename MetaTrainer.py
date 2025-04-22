@@ -15,7 +15,7 @@ class OutputSubTrainer:
         return self.index_type()
 
 class MetaTrainer:
-    def __init__(self, model:MetaBrain.MetaBrain, subtrainers:list[OutputSubTrainer] = None, opt = None):
+    def __init__(self, model:MetaBrain.MetaBrainViT, subtrainers:list[OutputSubTrainer] = None, opt = None):
         self.model=model
         self.trainable=False
         if subtrainers is not None:
@@ -60,10 +60,6 @@ class MetaTrainer:
         loader.setDevice(self.model.device)
         it=0
         for names, x, x_mask, y_real, y_mask in loader:
-            self.x = x
-            self.x_mask = x_mask
-            self.y_real = y_real
-            self.y_mask = y_mask
             it+=1
             if(verbose):
                 print("iter:", it)
