@@ -1,12 +1,9 @@
-import math
-from collections import OrderedDict
 
 import torch
 import torch.nn as nn
 
 import MetaTransformer
 import Module
-import Data as env
 
 class MetaBrainInput(nn.Module):
     def __init__(self, name, embedding, dim_z = None):
@@ -58,21 +55,20 @@ class ViTConvStack(nn.Module):
         return x
 
 class MetaBrainViT(nn.Module):
-    def __init__(self, dim_z = 256, device = env.DEVICE, heads = 8, layer_num = 6, dropout =(0.0, 0.2), class_embedding = False):
+    def __init__(self, dim_z, device, heads, layer_num, dropout):
         super(MetaBrainViT, self).__init__()
         self.dim_z = dim_z
         self.device=device
         self.pe = MetaTransformer.PositionEmbedding(dim_z=dim_z)
         self.input_modules=nn.ModuleDict()
         self.output_modules=nn.ModuleDict()
-        self.class_embedding = class_embedding
         
         self.cls = torch.nn.parameter.Parameter(torch.zeros(dim_z, dtype=torch.float32))
         
         self.addInput(MetaBrainInput("mri", ViTConvStack(dim_z = dim_z, dropout = dropout[0]), dim_z=dim_z))
         self.encoder = MetaTransformer.Encoder(dim_z = dim_z, heads = heads, layer_num = layer_num, dropout = dropout[1])
         
-        self.to(self.device)
+        self.to(device)
     
     def resetDevice(self, device):
         if isinstance(device, str):

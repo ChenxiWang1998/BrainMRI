@@ -16,9 +16,9 @@ def load(loader:Data.Loader, folder="images", file="T1/T1_brain_linear.npy"):
     
     loader = loader.dropna("SUVR")
     
-    age=loader.loadAge() #加载年龄数据
-    sex=loader.loadSex(one_hot=True) #加载性别数据
-    apoe=loader.loadAPOE(one_hot=True) #加载APOE数据
+    age=loader.loadAge()
+    sex=loader.loadSex(one_hot=True)
+    apoe=loader.loadAPOE(one_hot=True)
     
     suvr=loader.loadMetaData("SUVR")
     suvr.data = [ np.log(d / 1.11) for d in suvr.data]
@@ -26,8 +26,7 @@ def load(loader:Data.Loader, folder="images", file="T1/T1_brain_linear.npy"):
     suvrc = Data.CategoryMetaData("SUVRc", idx = [ 0 if v < 0 else 1 for v in suvr.data ])
     suvrc.shift_to_one_hot(2, ALPHA)
     
-    # 加载核磁数据
-    mri=loader.loadNpyPath(folder=folder, file=file) #核磁路径数组
+    mri=loader.loadNpyPath(folder=folder, file=file)
     if not DYNAMIC:
         mri.load()
     

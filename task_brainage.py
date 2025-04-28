@@ -17,12 +17,12 @@ def load(loader:Data.Loader, folder = "images", file = "T1/T1_brain_linear.npy",
     if baseline:
         loader.index = loader.index.drop_duplicates(subset = "subjectID")
     
-    loader = loader.dropna("age")#删除缺失年龄信息的样本
+    loader = loader.dropna("age") 
     
-    mri = loader.loadNpyPath(folder = folder, file = file, filter=True) #加载核磁数据x
+    mri = loader.loadNpyPath(folder = folder, file = file, filter=True) 
     
-    age = loader.loadAge() #加载年龄数据
-    sex = loader.loadSex(one_hot = True) #加载性别数据
+    age = loader.loadAge() 
+    sex = loader.loadSex(one_hot = True)
     if not DYNAMIC:
         mri.load()
     
@@ -87,7 +87,7 @@ test_CANDI = Data.Loader("CANDI", black = "black.txt")
 test_CANDI.index = test_CANDI.index.drop_duplicates(subset = "subjectID")
 test_loader_CANDI_dict = load_as_CDR(test_CANDI, dementia_states)
 
-model = MetaBrain.MetaBrainViT(dim_z = DIM_Z, device = DEVICE, layer_num = 6, dropout=[0, 0.1], class_embedding=True) #加载模型
+model = MetaBrain.MetaBrainViT(dim_z = DIM_Z, layer_num = 6, dropout=[0, 0.1], device = DEVICE) #加载模型
 model.addInput(MetaBrain.MetaBrainInput(name = "sex", embedding=generateSexInput(dim_z= DIM_Z), dim_z=DIM_Z)) #性别输出
 model.addOutput(MetaBrain.MetaBrainOutput(name = "age", predictor = nn.Linear(DIM_Z, 1))) #年龄预测输出
 

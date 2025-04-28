@@ -15,10 +15,10 @@ from Module import *
 dynamic=True
 
 def load(loader:Data.Loader, folder="images", file="T1/T1_brain_linear.npy"):
-    loader = loader.dropna("CDR") #删除缺失CDR数据的样本
+    loader = loader.dropna("CDR")
     
-    age=loader.loadAge() # 加载年龄数据
-    sex=loader.loadSex(one_hot=True) #加载性别数据
+    age=loader.loadAge()
+    sex=loader.loadSex(one_hot=True)
     
     #加载认知数据
     cdr=loader.loadMetaData("CDR")
@@ -32,8 +32,7 @@ def load(loader:Data.Loader, folder="images", file="T1/T1_brain_linear.npy"):
     cdr_CN_vs_MCI_vs_dementia=Data.CategoryMetaData("CDR_CN_vs_MCI_vs_dementia", *Data.searchIndex(cat=["CN", "MCI", "dementia"], data=cdr_groups, mask=cdr.mask))
     cdr_CN_vs_MCI_vs_dementia.shift_to_one_hot(3, alpha = ALPHA)
     
-    # 加载核磁数据
-    mri=loader.loadNpyPath(folder=folder, file=file) #核磁路径数组
+    mri=loader.loadNpyPath(folder=folder, file=file)
     if not dynamic:
         mri.load()
     
@@ -103,7 +102,7 @@ test_ADNI.index = test_ADNI.index.drop_duplicates(subset="subjectID")
 testset_ADNI=load(test_ADNI)
 test_loader_ADNI=Data.MetaDataLoader(testset_ADNI, batch_size = BATCH_SIZE, device=DEVICE, num_workers = 8)
 
-model = generate_model() #生成模型
+model = generate_model()
 
 subtrainers=[
     MetaTrainer.OutputSubTrainer("CDR_CN_vs_MCI", loss_function=F.cross_entropy, index_type=Index.BinaryCatogoryIndex), 

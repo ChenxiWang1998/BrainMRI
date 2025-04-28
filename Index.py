@@ -8,7 +8,41 @@ from scipy.stats import pearsonr
 from sklearn.metrics import accuracy_score, roc_auc_score
 import torch
 
-import Painter
+class Draw:
+    def __init__(self, path, title="", legend=False):
+        self.path=path
+        self.title=title
+        self.legend=legend
+    
+    def __enter__(self):
+        plt.figure(figsize=(6, 6)) 
+        plt.title(self.title)
+    
+    def __exit__(self, exc_type, exc_value, exc_tb):
+        if(self.legend):
+            plt.legend()
+        plt.savefig(self.path)
+        plt.close()
+
+class DrawROC:
+    def __init__(self, path, title="", legend=False):
+        self.path=path
+        self.title=title
+        self.legend=legend
+    
+    def __enter__(self):
+        plt.figure(figsize=(6, 6)) 
+        plt.title(self.title)
+        plt.xlim(0, 1)
+        plt.ylim(0, 1)
+        plt.xlabel("1 - Specificity")
+        plt.ylabel("Sensitivity")
+    
+    def __exit__(self, exc_type, exc_value, exc_tb):
+        if(self.legend):
+            plt.legend()
+        plt.savefig(self.path)
+        plt.close()
 
 class IndexPainter():
     def __init__(self, targets) -> None:
@@ -50,9 +84,9 @@ class IndexBase(ABC):
     def __init__(self):
         self.calculated = False
 
-        self.y_pred_list = [] #预测结果
-        self.y_real_list = [] #实际结果
-        self.names_list = [] #样本索引
+        self.y_pred_list = [] #predicted value
+        self.y_real_list = [] #real value
+        self.names_list = [] #sample id
     
     def record(self, y_pred, y_real, names=None):
         self.y_pred_list.append(y_pred.detach().cpu())

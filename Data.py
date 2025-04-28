@@ -10,9 +10,6 @@ from torchio.transforms import Compose, RescaleIntensity, CropOrPad
 
 from MetaData import *
 
-DEVICE=torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-LABELS=["AD", "SMC", "MCI", "LMCI", "EMCI", "CN", "nonAD"]
-
 def searchIndex(cat, data, mask):
     r_idx=[]
     r_mask=[]
@@ -279,10 +276,5 @@ COLOR={
     "test(CANDI)":"#0000ff",
 }
 
-def parameters_stats(model : torch.nn.Module):
-    num = 0
-    for p in model.parameters():
-        num += p.numel()
-    return num
 
 
